@@ -18,6 +18,8 @@ MODULE_AUTHOR("TUNG<tungnt58@fsoft.com.vn>");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("0.1");
 
+#define MIC_DEVICE_NAME virtual_mic
+
 static struct class *class_name;
 static struct device *device_name;
 static struct cdev my_cdev;
@@ -83,7 +85,7 @@ static int __init exam_init(void)
 {
 	int ret;
 
-	ret = alloc_chrdev_region(&dev, 0, 1, "reboot");
+	ret = alloc_chrdev_region(&dev, 0, 1, "virtual_mic_class");
 	if (ret) {
 		pr_info("Can not register major number\n");
 		goto fail_reg;
@@ -101,14 +103,14 @@ static int __init exam_init(void)
 		return ret;
 	}
 
-	class_name = class_create(THIS_MODULE, "reboot");
+	class_name = class_create(THIS_MODULE, "virtual_mic_class");
 	if (IS_ERR(class_name)) {
 		pr_info("create class failed\n");
 		goto fail_reg;
 	}
 	pr_info("create successfully class\n");
 
-	device_name = device_create(class_name, NULL, dev, NULL, "reboot");
+	device_name = device_create(class_name, NULL, dev, NULL, "MIC_DEVICE_NAME");
 	if (IS_ERR(device_name)) {
 		pr_info("Create device failed\n");
 		goto dev_fail;
